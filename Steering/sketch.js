@@ -37,7 +37,15 @@ function draw() {
         }
 
         if (agent.isDead()) {
+            console.log("dead");
             agents.splice(i,1);
+        }
+
+        const c = agent.reproduce();
+
+        if (c) {
+            console.log("newAgent");
+            agents.push(c);
         }
     }
 }
