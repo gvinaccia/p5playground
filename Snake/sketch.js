@@ -3,6 +3,9 @@ let fr = 10;
 let food;
 let buttonStartPos;
 let currentState;
+let bgSound;
+let okSound;
+let errorSound;
 
 const r = 10;
 const coords = [];
@@ -14,11 +17,13 @@ const newGameState = {
     mouseClicked() {
         const mousePos = createVector(mouseX, mouseY);
         if (buttonStartPos.dist(mousePos) <= 25) {
+            playSound(bgSound, 0.05);
             s = new Snake(randomVect());
             fr = 10;
             frameRate(fr);
             food = randomVect();
             currentState = playingState;
+
         }
     }
 }
@@ -33,10 +38,12 @@ const playingState = {
 
         ellipse(food.x + r / 2, food.y + r / 2, r);
         if (s.eat(food)) {
+            playSound(okSound, 0.8);
             food = randomVect();
         }
 
         if (!s.stillAlive()) {
+            playSound(errorSound, 0.8);
             currentState = gameOverState;
         }
     },
@@ -54,7 +61,14 @@ const gameOverState = {
     }
 }
 
+function preload() {
+    bgSound = loadSound('assets/bb.mp3');
+    okSound = loadSound('assets/sfx_sounds_impact10.wav');
+    errorSound = loadSound('assets/sfx_sounds_error3.wav');
+}
+
 function setup() {
+
     createCanvas(500, 500);
 
     for (let i = 0; i < width; i += r) {
@@ -101,3 +115,7 @@ function randomVect() {
     return createVector(w, h);
 }
 
+function playSound(sound, volume) {
+    sound.play();
+    sound.setVolume(volume);
+}
